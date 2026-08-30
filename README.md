@@ -1,4 +1,4 @@
-﻿<p align="center">
+<p align="center">
   <img src="docs/images/logo.png" alt="JobRadar" width="72"/>
 </p>
 
