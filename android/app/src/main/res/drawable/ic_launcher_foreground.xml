@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Radar sweep icon: concentric arcs + sweep line + a blip. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#2DE1C2"
+        android:strokeWidth="2.5"
+        android:pathData="M54,20 a34,34 0 1,1 -0.01,0" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#2DE1C2"
+        android:strokeWidth="2.5"
+        android:strokeAlpha="0.55"
+        android:pathData="M54,34 a20,20 0 1,1 -0.01,0" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#6C7CFF"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M54,54 L78,30" />
+    <path
+        android:fillColor="#2DE1C2"
+        android:pathData="M54,54 m-5,0 a5,5 0 1,1 10,0 a5,5 0 1,1 -10,0" />
+    <path
+        android:fillColor="#6C7CFF"
+        android:pathData="M76,30 m-4,0 a4,4 0 1,1 8,0 a4,4 0 1,1 -8,0" />
+</vector>

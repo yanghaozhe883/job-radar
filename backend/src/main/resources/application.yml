@@ -1,0 +1,87 @@
+spring:
+  application:
+    name: jobradar-backend
+
+  # Active profile. Local default = "h2" (zero-config, in-memory).
+  # For real DB use: --spring.profiles.active=postgres
+  profiles:
+    active: h2
+
+  jackson:
+    # Ensure the { code, message, data } envelope and camelCase field names
+    # serialize/deserialize consistently. (Field-level @JsonNaming handles
+    # snake_case contract fields; see dto package.)
+    default-property-inclusion: non_null
+
+server:
+  port: 8080
+  shutdown: graceful
+
+# --- Demo data ---
+# OFF by default: production serves real (ingested/scraped) data. Set true to
+# load the sample dataset for a zero-setup local/demo run.
+demo:
+  seed: ${DEMO_SEED:false}
+
+# --- Crawler / data ingestion (compliance-first) ---
+# OFF by default. Enable with --crawler.enabled=true. Only reads public data,
+# rate-limits, identifies itself, respects robots.txt, and stamps dataSource.
+crawler:
+  enabled: ${CRAWLER_ENABLED:false}
+  source: ${CRAWLER_SOURCE:demo}          # demo | http
+  rate-limit-ms: ${CRAWLER_RATE_LIMIT:3000}
+  user-agent: "JobRadarBot/1.0 (+https://jobradar.demo; respectful crawler)"
+  respect-robots: true
+  target-url: ${CRAWLER_TARGET_URL:}       # for source=http
+
+# --- LLM / AnythingLLM (local knowledge base) ---
+# API key is read from the environment (NOT committed). Only the backend holds
+# it; the Android app talks to this backend, never to AnythingLLM directly.
+llm:
+  base-url: ${LLM_BASE_URL:http://127.0.0.1:3001}
+  api-key: ${ANYTHINGLLM_API_KEY:}
+  workspace-slug: ${LLM_WORKSPACE:job-radar}
+
+# --- API contract ---
+api:
+  base-path: /api/v1
+
+# --- Logging ---
+logging:
+  level:
+    com.jobradar: INFO
+    org.springframework.web: INFO
+
+---
+# --- H2 (dev / default) ---
+spring:
+  config:
+    activate:
+      on-profile: h2
+  datasource:
+    url: jdbc:h2:mem:jobradar;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+
+---
+# --- PostgreSQL (prod-like) ---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/jobradar}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:jobradar}
+    password: ${DB_PASSWORD:jobradar}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false

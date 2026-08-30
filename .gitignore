@@ -1,0 +1,42 @@
+# --- Build outputs ---
+**/build/
+**/out/
+*.apk
+*.aab
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# --- Gradle / cache ---
+.gradle/
+build/
+
+# --- IDE ---
+.idea/
+*.iml
+.vscode/
+*.swp
+.DS_Store
+
+# --- Android ---
+android/local.properties
+*.keystore
+*.jks
+captures/
+.externalNativeBuild/
+.cxx/
+
+# --- Node ---
+node_modules/
+.next/
+pnpm-lock.yaml
+tsconfig.tsbuildinfo
+
+# --- Secrets / envs ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# --- Logs ---
+*.log
