@@ -35,19 +35,23 @@
 
 ---
 
-## 🚀 3 分钟跑起来（Docker 一键）
+## 🚀 3 分钟跑起来
 
 ```bash
-# 1) 起后端（内置 H2 + Mock 数据源，零配置）
+# 1) 起后端（内置 H2 + JobProvider Mock，零配置）
 cd backend
-./gradlew bootRun            # http://localhost:8080
+./gradlew bootRun            # http://localhost:8080  (GET /api/v1/jobs)
 
-# 2) Android（Android Studio 打开 android/ 直接运行）
+# 2) 起 Web 端（连后端 JobProvider）
+cd web
+pnpm install && pnpm dev      # http://localhost:3000 → /explorer
+
+# 3) Android（Android Studio 打开 android/ 直接运行）
 cd android
 ./gradlew :app:assembleDebug :app:testDebugUnitTest
 ```
 
-> 后端零配置、Mock 数据开箱即用；Android 无需任何外部依赖即可跑。这就是「别人能跑」的最低门槛。
+> 后端零配置、Mock 数据开箱即用；Web 连后端、Android 可装，**端手一体**。这就是「别人能跑」的最低门槛。
 
 ---
 
