@@ -2,7 +2,18 @@
 
 JobRadar 按版本成长。每个版本都是值得发布、值得回顾、值得展示的里程碑。
 
-## v0.1 · Foundation
+## v0.2 · Connect ✅（已发布 `v0.2.0`）
+
+**Mission：所有客户端只认 Backend，Backend 只认 JobProvider。**
+
+- 规范产品读取 API：`/jobs` · `/jobs/{id}` · `/companies/{name}` · `/providers`（走 JobProvider）
+- **Web 接入后端**：Web 只认 `/api/jobs`（薄代理），不知道 Mock / CSV / 数据源——数据源换多少次，Web 零修改。
+- **统一领域模型**：跨端一套 `JobDto` / `CompanyDto`（snake_case），业务层与数据源解耦。
+- 接口稳定，不再乱长：Agent / AI 的未来能力都建立在这套 API 上。
+
+> 原则：**产品按版本成长，不按代码行数成长。** 做到"把数据链路打通"就发布，不因为还能继续写就继续写。
+
+## v0.1 · Foundation ✅（已发布 `v0.1.0`）
 
 **发布日期**：(tag `v0.1.0`)
 

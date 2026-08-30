@@ -15,10 +15,10 @@ JobRadar 按版本成长。这里规划的是**每一个值得发布的里程碑
 
 ---
 
-## v0.2 · Connect（规划中）
+## v0.2 · Connect ✅（已发布 `v0.2.0`）
 - **Web 接入后端 `JobProvider`**，替换本地 Mock → 端手数据源真正打通
-- 端手「登录 / 收藏 / 投递」状态实时同步
-- 引入 GitHub Project / Issue → PR → Review 的标准研发流程
+- 规范 API：`/jobs` / `/jobs/{id}` / `/companies/{name}` / `/providers`
+- 统一领域模型（跨端一套 JobDto），Web 只认后端、不知数据源
 
 > **目标**：从"各自 Mock"进化到"端手一体、数据源统一"。
 
