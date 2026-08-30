@@ -104,3 +104,7 @@ MIT
 这个项目是一个独立作者的公开作品。它同时承载一个意图——**用持续、真实、有人用的作品，去证明能力本身，而不止于一张学历**。
 
 如果你觉得有用，欢迎 star；如果你发现问题，欢迎提 Issue——**真正的产品，从第一批用户开始。**
+
+- 📅 [CHANGELOG](CHANGELOG.md) · v0.1 · Foundation
+- 🗺 [ROADMAP](ROADMAP.md) · v0.1 → v1.0 Agent
+- 🤝 [CONTRIBUTING](CONTRIBUTING.md) · [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)

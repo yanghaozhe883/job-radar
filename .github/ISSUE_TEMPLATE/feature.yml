@@ -1,0 +1,25 @@
+name: "✨ Feature / Product"
+description: 提出一个产品功能或改进
+title: "[feat] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: JobRadar 按版本成长——说一下这个功能属于哪个 milestone、为什么值得做。
+  - type: textarea
+    id: why
+    attributes:
+      label: 为什么做
+      placeholder: 它解决了求职生命周期中的什么问题？
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: 怎么做
+      placeholder: 期待的行为 / 交互 / 端（Android / Web / Backend）
+  - type: input
+    id: milestone
+    attributes:
+      label: 对应 milestone
+      placeholder: v0.2 Connect / v0.3 Insight / …
