@@ -22,16 +22,16 @@
 
 ## 🗺 版本路线图（做产品，不是做项目）
 
-| 版本 | 能力 |
-|------|------|
-| **v0.1** | 搜索 / 筛选 / 收藏 / 投递记录 / Android+Web 同步（MVP） |
-| **v0.2** | AI 岗位分析 / 匹配度 / 公司画像 |
-| **v0.3** | Offer 比较 / 面试记录 |
-| **v0.4** | 职位订阅 / 提醒 |
-| **v0.5** | AI 简历优化 |
-| **v1.0** | Agent（自动搜索/推荐/授权投递） |
+| 版本 | 定位 | 能力 |
+|------|------|------|
+| **v0.1** | Foundation ✅ | 端手一体骨架 · 可插拔 JobProvider · 产品级视觉 |
+| **v0.2** | Connect ✅ | 所有客户端只认 Backend · Backend 只认 JobProvider · 数据源打通 |
+| **v0.3** | Insight | **AI 岗位分析 / 匹配度 / 公司画像**（让岗位可理解） |
+| **v0.4** | Automation | 职位订阅 / 提醒 / 面试记录 / 时间线 |
+| **v0.5** | Polish | AI 简历优化 / 数据源体验打磨 |
+| **v1.0** | Agent | 自动搜索 / 分析 / 推荐 / 授权投递 |
 
-> 当前进度：**v0.1**（搜索/收藏/同步 + 完整端手骨架已跑通）
+> 当前进度：**v0.2 · Connect 已发布**（`v0.2.0`）。下一步 v0.3 Insight —— 让岗位从 JD 文本变成可理解的决策信息。
 
 ---
 
@@ -109,6 +109,6 @@ MIT
 
 如果你觉得有用，欢迎 star；如果你发现问题，欢迎提 Issue——**真正的产品，从第一批用户开始。**
 
-- 📅 [CHANGELOG](CHANGELOG.md) · v0.1 · Foundation
+- 📅 [CHANGELOG](CHANGELOG.md) · v0.1 Foundation → v0.2 Connect
 - 🗺 [ROADMAP](ROADMAP.md) · v0.1 → v1.0 Agent
 - 🤝 [CONTRIBUTING](CONTRIBUTING.md) · [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)
