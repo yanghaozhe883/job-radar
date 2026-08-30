@@ -1,12 +1,17 @@
 <p align="center">
-  <img src="docs/images/logo.png" alt="JobRadar" width="72"/>
+  <img src="docs/images/logo.png" alt="候风 JobRadar" width="72"/>
 </p>
 
-<h1 align="center">JobRadar</h1>
+<h1 align="center">候风 <span style="font-weight:300;color:#8a94a6">JobRadar</span></h1>
+
+<p align="center">
+  <b>风未至，而先知其向。</b><br/>
+  <span style="font-size:0.9em;color:#8a94a6">候风 · 感知世界即将发生什么 —— 提前发现机会，而不是搜索岗位。</span>
+</p>
 
 <p align="center">
   <b>Manage your job hunting lifecycle, not just job search.</b><br/>
-  An AI-native workspace for your entire job hunting journey - from discovering opportunities to tracking interviews and offers.
+  <span style="font-size:0.9em;color:#8a94a6">An AI-native workspace for your entire job hunting journey — from discovering opportunities to tracking interviews and offers.</span>
 </p>
 
 <p align="center">
@@ -14,7 +19,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/hero.png" alt="JobRadar" width="680"/>
+  <img src="docs/images/hero.png" alt="候风 JobRadar" width="680"/>
 </p>
 
 ---
@@ -73,7 +78,7 @@ One shared contract `{ code, message, data }` · real-time sync · data sources 
 
 ## Why JobRadar
 
-Job hunting is not just "searching for a job" - it is **managing the whole journey from apply to offer**. JobRadar helps you manage your career like a product, with AI applied to real decisions.
+Job hunting is not just "searching for a job" - it is **managing the whole journey from apply to offer**. 候风 helps you manage your career like a product, with AI applied to real decisions.
 
 ---
 
@@ -90,6 +95,6 @@ MIT
 ---
 
 <p align="center">
-  <b>A real product starts with its first users.</b><br/>
-  If you find it useful, give a ⭐; if you find a bug, open an <a href="https://github.com/yanghaozhe883/job-radar/issues">Issue</a>.
+  <b>风未至，而先知其向。</b><br/>
+  真正的产品，从第一批用户开始。若你觉得有用，欢迎 ⭐；有问题，欢迎提 <a href="https://github.com/yanghaozhe883/job-radar/issues">Issue</a>。
 </p>

@@ -3,8 +3,8 @@ import "./globals.css";
 import { AppShell } from "@/components/AppShell";
 
 export const metadata: Metadata = {
-  title: "JobRadar · 求职雷达",
-  description: "管理求职生命周期，而不是只找工作。端手一体的 AI 求职产品。",
+  title: "候风 · JobRadar",
+  description: "候风 · 感知世界即将发生什么。端手一体的 AI 求职产品。",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
