@@ -1,6 +1,32 @@
-import { jobs } from "@/lib/mock";
+"use client";
+
+import { useEffect, useState } from "react";
+import { ExplorerJob } from "@/lib/types";
 
 export default function ExplorerPage() {
+  const [jobs, setJobs] = useState<ExplorerJob[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let stale = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/jobs?pageSize=50`, { cache: "no-store" });
+        const data = await res.json();
+        if (!stale) {
+          setJobs(data.items ?? []);
+          setTotal(data.total ?? 0);
+        }
+      } finally {
+        if (!stale) setLoading(false);
+      }
+    }
+    load();
+    return () => { stale = true; };
+  }, []);
+
   return (
     <div className="max-w-5xl">
       <div className="mb-6">
@@ -17,52 +43,52 @@ export default function ExplorerPage() {
             className="bg-transparent outline-none text-sm w-full text-white placeholder:text-text-tertiary"
           />
         </div>
-        {["全部", "全职", "实习", "远程"].map((f, i) => (
-          <span
-            key={f}
-            className={`px-3 py-1.5 rounded-lg text-sm ${
-              i === 0 ? "bg-primary/15 text-primary" : "text-text-secondary hover:text-white"
-            }`}
-          >
+        {["全部"].map((f) => (
+          <span key={f} className="px-3 py-1.5 rounded-lg text-sm bg-primary/15 text-primary">
             {f}
           </span>
         ))}
       </div>
 
       {/* Job list */}
-      <div className="grid grid-cols-1 gap-3">
-        {jobs.map((job) => (
-          <div key={job.id} className="glass p-5 hover:border-primary/30 transition">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 text-primary font-bold text-lg">
-                {job.companyLogo}
+      {loading ? (
+        <div className="text-text-tertiary text-sm py-16 text-center">加载中…</div>
+      ) : (
+        <div className="grid grid-cols-1 gap-3">
+          {jobs.map((job) => (
+            <div key={job.id} className="glass p-5 hover:border-primary/30 transition">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 text-primary font-bold text-lg">
+                  {job.companyLogo}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-white">{job.title}</div>
+                  <div className="text-xs text-text-secondary mt-0.5">{job.company}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-primary font-bold">{job.score}</div>
+                  <div className="text-[10px] text-text-tertiary">匹配度</div>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-white">{job.title}</div>
-                <div className="text-xs text-text-secondary mt-0.5">{job.company}</div>
-              </div>
-              <div className="text-right">
-                <div className="text-primary font-bold">{job.score}</div>
-                <div className="text-[10px] text-text-tertiary">匹配度</div>
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-text-secondary">
+                <span>{job.city}</span>
+                <span className="text-text-tertiary">·</span>
+                <span className="text-primary">{job.salary}</span>
+                <div className="ml-auto flex gap-1">
+                  {job.tags.slice(0, 3).map((t) => (
+                    <span key={t} className="rounded-md bg-white/5 px-2 py-0.5 text-[11px] text-text-secondary">
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-text-secondary">
-              <span>{job.city}</span>
-              <span className="text-text-tertiary">·</span>
-              <span className="text-primary">{job.salary}</span>
-              <span className="text-text-tertiary">·</span>
-              <span>{job.published}</span>
-              <div className="ml-auto flex gap-1">
-                {job.tags.slice(0, 3).map((t) => (
-                  <span key={t} className="rounded-md bg-white/5 px-2 py-0.5 text-[11px] text-text-secondary">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+          {jobs.length === 0 && (
+            <div className="text-text-tertiary text-sm py-16 text-center">暂无职位（后端未连接？）</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
