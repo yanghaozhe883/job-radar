@@ -1,124 +1,86 @@
-# JobRadar · 求职雷达
+﻿<p align="center">
+  <img src="docs/images/logo.png" alt="JobRadar" width="72"/>
+</p>
 
-> **管理求职生命周期，而不是只找工作。**
-
-一个端手一体的求职产品：教你从「投递 → 面试 → Offer」的整个过程一屏管理，而不是把你丢给一个"搜岗位"的搜索框就来去无踪。Android 原生 + Web + 后端 + AI，全部打通。
+<h1 align="center">JobRadar 路 姹傝亴闆疯揪</h1>
 
 <p align="center">
-  <img src="docs/images/radar.png" alt="求职雷达 雷达页" width="300"/>
+  <b>Manage your job hunting lifecycle, not just job search.</b><br/>
+  绔墜涓€浣撶殑 AI 姹傝亴宸ヤ綔鍙?鈥斺€?浠庡彂鐜版満浼氬埌璺熻釜闈㈣瘯涓?Offer锛屼竴灞忕鐞嗐€?</p>
+
+<p align="center">
+  <a href="#-quick-start"><b>Quick Start</b></a> 路 <a href="https://jobradar.dev">Live Demo</a> 路 <a href="ROADMAP.md">Roadmap</a>
+</p>
+
+<p align="center">
+  <img src="docs/images/hero.png" alt="JobRadar" width="680"/>
 </p>
 
 ---
 
-## 这是什么
+## 鉁?Features
 
-**一句话**：把你求职的每一次动作——收藏、投递、面试、Offer、待办跟进——收进一个界面，端手实时同步，AI 帮你判断值不值得投。
-
-**它和"求职网站"的区别**：求职网站帮你**找**岗位，JobRadar 帮你**管**求职这件事。投到哪了、面到哪了、哪个 offer 更好、这家公司值不值得去——全都在一个地方，清清楚楚。
-
-它不是另一个 AI 聊天框。它是**把 AI 用在求职的真实决策上**，而不是让它陪你闲聊。
-
----
-
-## 为什么是它
-
-- **端手一体**：Android 原生（Kotlin + Jetpack Compose）+ Web（Next.js）+ 后端（Spring Boot），一套数据契约，全端实时同步。手机上看、电脑上改，状态一致。
-- **AI 用在刀刃上**：AI 岗位分析、与你的匹配度、公司值不值得去、JD 浓缩成要点——帮你在关键节点做决定，而不是替代你做决定。
-- **架构克制可插拔**：职位数据源是抽象接口，Mock / CSV / 未来任何数据源都是插件，**产品本身不关心数据从哪来**。这就避免了"天天爬虫、天天修接口"的泥潭。
-- **干净的工程**：Clean Architecture + 单向数据流 + 分层解耦 + 单元/集成测试 + Lint 0 错误。它证明的不只是"会调 AI"，而是**会做真正的软件**。
+- 馃摫 **Native Android App** 鈥?Kotlin 路 Jetpack Compose 路 MVI
+- 馃寪 **Web Dashboard** 鈥?Next.js 路 绔墜瀹炴椂鍚屾
+- 馃 **AI Insights** 鈥?宀椾綅鍒嗘瀽 路 鍖归厤搴?路 鍏徃鐢诲儚
+- 馃搳 **Job Pipeline** 鈥?鏀惰棌 鈫?鎶曢€?鈫?闈㈣瘯 鈫?Offer
+- 馃搫 **Resume Workspace** 鈥?浣犵殑绠€鍘嗭紝涔熸槸浜у搧鐨勪竴閮ㄥ垎
+- 馃攲 **Pluggable Providers** 鈥?鑱屼綅鏁版嵁婧愬彲鎻掓嫈
 
 ---
 
-## 快速开始（3 分钟）
+## 馃殌 Quick Start
 
 ```bash
-# 1) 起后端（内置数据 + Mock 数据源，零配置）
-cd backend
-./gradlew bootRun            # http://localhost:8080
-
-# 2) 起 Web 端（连后端）
-cd web
-pnpm install && pnpm dev      # http://localhost:3000
-
-# 3) Android（用 Android Studio 打开 android/ 直接运行）
-cd android
-./gradlew :app:assembleDebug :app:testDebugUnitTest
+# 鍚庣锛堥浂閰嶇疆 路 Mock 鏁版嵁锛?cd backend && ./gradlew bootRun
+# Web
+cd web && pnpm install && pnpm dev
+# Android
+cd android && ./gradlew :app:assembleDebug
 ```
 
-> 后端零配置、开箱即用；Web 连后端、Android 可装。最低门槛即可跑起来看到完整产品。
-
 ---
 
-## 架构
+## 馃П Architecture
 
-```
- Android (Kotlin/Compose)     Web (Next.js)
-        │       实时同步          │
-        ▼                        ▼
-   Backend (Spring Boot)  · 统一数据契约 · 实时推送
-        │
-        ▼
-   职位数据源（可插拔）—— Mock · CSV · 未来更多
-        │
-        ▼
-   AI 层 · 岗位分析 · 匹配度 · 公司画像
+```mermaid
+graph TD
+  Android[馃摫 Android Native] --> API[(Backend 路 Spring Boot)]
+  Web[馃寪 Web Dashboard] --> API
+  API --> P[馃攲 Pluggable Provider]
+  P --> Mock[Mock Data]
+  P --> CSV[CSV]
+  API --> AI[馃 AI Layer]
 ```
 
-- **统一契约**：所有端走同一套 `{ code, message, data }` 数据信封，字段 `snake_case`。
-- **数据源抽象**：职位读取走一个接口，数据来源完全插件化——换数据源不改任何界面。
-- **AI 能力层**：岗位分析、匹配度、公司画像，作为服务能力，而不是独立的聊天入口。
+涓€濂楁暟鎹绾?**`{ code, message, data }`** 路 鍏ㄧ瀹炴椂鍚屾 路 鏁版嵁鏉ユ簮瀹屽叏鎻掍欢鍖栥€?
+---
+
+## 馃椇 Roadmap
+
+**v0.1 Foundation 鈫?v0.2 Connect 鈫?v0.3 Insight 鈫?v0.4 Automation 鈫?v1.0 Agent**
+
+| 鐗堟湰 | 閲岀▼纰?|
+|------|--------|
+| 鉁?v0.1 | Foundation 路 绔墜涓€浣撻鏋?路 鍙彃鎷旀暟鎹簮 |
+| 鉁?v0.2 | Connect 路 Web/App/鍚庣 鏁版嵁閾捐矾鎵撻€?|
+| 馃敎 v0.3 | Insight 路 AI 璁╁矖浣嶅彲鐞嗚В銆佸彲姣旇緝 |
+| 鈴?v0.4 | Automation 路 璁㈤槄 / 鎻愰啋 / 闈㈣瘯璁板綍 |
+| 鈴?v1.0 | Agent 路 鑷姩鎼滅储 / 鎺ㄨ崘 / 鎺堟潈鎶曢€?|
 
 ---
 
-## 技术栈
+## 馃挱 Why JobRadar
 
-| 端 | 技术 |
-|----|------|
-| Android | Kotlin · Jetpack Compose · MVI · Hilt · Clean Architecture |
-| Web | Next.js · TypeScript · Tailwind CSS |
-| 后端 | Kotlin · Spring Boot · WebSocket · 可插拔数据源 · AI 服务层 |
-| 数据 | 可插拔数据源（Mock / CSV / 未来插件），统一契约 |
+鐪熸鐨勬眰鑱岋紝涓嶆槸"鎼滃埌涓€浠藉伐浣?锛岃€屾槸**manage 鏁翠釜浠庢姇閫掑埌 offer 鐨勮繃绋?*銆侸obRadar 鍍忕鐞嗕竴涓骇鍝佷竴鏍凤紝绠＄悊浣犵殑鑱屼笟鈥斺€旇€?AI 鐢ㄥ湪鍏抽敭鍐崇瓥涓婏紝鑰屼笉鏄櫔浣犻棽鑱娿€?
+---
+
+## 馃搫 License & Contributing
+
+MIT 路 [Contributing](CONTRIBUTING.md) 路 [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ---
 
-## 目录结构
-
-| 目录 | 说明 |
-|------|------|
-| `android/` | Android 原生应用 |
-| `web/` | Web 端（Next.js） |
-| `backend/` | 后端服务（Spring Boot） |
-| `docs/` | 设计文档 / 规范 |
-| `fedata/` | 演示数据 |
-
----
-
-## 为什么值得看
-
-如果你在做 AI 应用、想做端手一体的产品，或者想看看"怎么把一个 AI 功能做成真正有用的产品"——这里有一套完整的、可运行、可扩展的实践。
-
-它也是一个公开的成长记录：从 v0.1 做一个能跑的产品，到 v0.2 把端手数据链路打通。**按版本长大，而不是按代码行数堆。**
-
----
-
-## 版本
-
-- **v0.1 · Foundation**：端手一体骨架、可插拔数据源、产品级视觉。
-- **v0.2 · Connect**：端手数据源真正打通，Web/App/后端一套模型。
-- **v0.3 · Insight**（规划）：AI 让每个岗位"看得懂、比得出、能决策"。
-
-完整路线见 [ROADMAP](ROADMAP.md)，变更见 [CHANGELOG](CHANGELOG.md)。
-
----
-
-## License
-
-MIT
-
----
-
-## 关于
-
-一个独立作者持续维护的公开作品。如果你觉得有用，欢迎 star；如果发现问题，欢迎提 Issue——**真正的产品，从第一批用户开始。**
-
-- 👏 [贡献指南](CONTRIBUTING.md) · [行为准则](CODE_OF_CONDUCT.md)
+<p align="center">
+  <b>鐪熸鐨勪骇鍝侊紝浠庣涓€鎵圭敤鎴峰紑濮嬨€?/b><br/>
+  濡傛灉浣犺寰楁湁鐢紝娆㈣繋 猸?Star锛涙湁闂锛屾杩庢彁 <a href="https://github.com/yanghaozhe883/job-radar/issues">Issue</a>銆?</p>
