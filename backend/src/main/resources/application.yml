@@ -46,6 +46,15 @@ llm:
 api:
   base-path: /api/v1
 
+# --- JobProvider (pluggable data source) ---
+# The product reads jobs through a JobProvider. The UI/business layer never
+# knows where data comes from; swap `key` to switch source without code change.
+#   mock (default, in-memory) | csv (read a CSV file via csv-path) | future plugins
+jobradar:
+  provider:
+    key: ${JOBRADAR_PROVIDER:mock}
+    csv-path: ${JOBRADAR_PROVIDER_CSV:fedata/provider-demo.csv}
+
 # --- Logging ---
 logging:
   level:

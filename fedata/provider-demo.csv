@@ -1,0 +1,7 @@
+title,city,salary_min_k,salary_max_k,skills,company
+AI应用工程师（实习）,杭州,8,12,RAG|Agent|LLM,芥子科技
+智能体工程师,上海,40,70,Multi-Agent|Tool Calling|Python,灵犀实验室
+后端开发（Kotlin）,北京,30,50,Kotlin|Spring Boot|WebSocket,瀚海数据
+前端开发（Next.js）,成都,22,40,Next.js|TypeScript|Tailwind,云端科技
+大数据开发,广州,30,48,Spark|Kafka|Flink,南粤数据
+测试开发工程师,深圳,18,32,Python|自动化|接口测试,深南科技
