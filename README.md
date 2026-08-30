@@ -1,9 +1,8 @@
-# 求职雷达 JobRadar
+# JobRadar · 求职雷达
 
 > **管理求职生命周期，而不是只找工作。**
-> 一个真正端手一体的 AI 求职产品：Android 原生 + Web + 后端 + AI Agent。干净、克制、极致。
 
-求职雷达不是想帮你"搜到一份工作"，而是想帮你**manage 整个求职过程**——收藏、投递记录、面试、Offer、AI 建议、公司画像、时间线、提醒，一屏管理，端手实时同步。它证明了两件事：**你会做 AI Agent，也会做真正的软件。**
+一个端手一体的求职产品：教你从「投递 → 面试 → Offer」的整个过程一屏管理，而不是把你丢给一个"搜岗位"的搜索框就来去无踪。Android 原生 + Web + 后端 + AI，全部打通。
 
 <p align="center">
   <img src="docs/images/radar.png" alt="求职雷达 雷达页" width="300"/>
@@ -11,104 +10,115 @@
 
 ---
 
-## ✨ 为什么是它
+## 这是什么
 
-- **端手一体**：Android 原生（Kotlin/Compose）+ Web（Next.js）+ 后端（Spring Boot），同一套 `{ code, message, data }` 契约，全端实时同步。
-- **AI 原生**：AI 助手接本地知识库（AnythingLLM + RAG）、JD 分析、岗位匹配度、公司画像——AI 不是噱头，是让体验更好的能力层。
-- **可插拔数据源**：`JobProvider` 接口，Boss/智联/猎聘/官网都是 **future plugin**，产品本身完全不知道数据从哪来。第一阶段用 Mock + 可插拔，绝不碰爬虫。
-- **深邃的工程**：Clean Architecture + MVI 单向数据流 + Hilt + 契约层 + 单元/集成测试 + Lint 0 错误。
+**一句话**：把你求职的每一次动作——收藏、投递、面试、Offer、待办跟进——收进一个界面，端手实时同步，AI 帮你判断值不值得投。
 
----
+**它和"求职网站"的区别**：求职网站帮你**找**岗位，JobRadar 帮你**管**求职这件事。投到哪了、面到哪了、哪个 offer 更好、这家公司值不值得去——全都在一个地方，清清楚楚。
 
-## 🗺 版本路线图（做产品，不是做项目）
-
-| 版本 | 定位 | 能力 |
-|------|------|------|
-| **v0.1** | Foundation ✅ | 端手一体骨架 · 可插拔 JobProvider · 产品级视觉 |
-| **v0.2** | Connect ✅ | 所有客户端只认 Backend · Backend 只认 JobProvider · 数据源打通 |
-| **v0.3** | Insight | **AI 岗位分析 / 匹配度 / 公司画像**（让岗位可理解） |
-| **v0.4** | Automation | 职位订阅 / 提醒 / 面试记录 / 时间线 |
-| **v0.5** | Polish | AI 简历优化 / 数据源体验打磨 |
-| **v1.0** | Agent | 自动搜索 / 分析 / 推荐 / 授权投递 |
-
-> 当前进度：**v0.2 · Connect 已发布**（`v0.2.0`）。下一步 v0.3 Insight —— 让岗位从 JD 文本变成可理解的决策信息。
+它不是另一个 AI 聊天框。它是**把 AI 用在求职的真实决策上**，而不是让它陪你闲聊。
 
 ---
 
-## 🚀 3 分钟跑起来
+## 为什么是它
+
+- **端手一体**：Android 原生（Kotlin + Jetpack Compose）+ Web（Next.js）+ 后端（Spring Boot），一套数据契约，全端实时同步。手机上看、电脑上改，状态一致。
+- **AI 用在刀刃上**：AI 岗位分析、与你的匹配度、公司值不值得去、JD 浓缩成要点——帮你在关键节点做决定，而不是替代你做决定。
+- **架构克制可插拔**：职位数据源是抽象接口，Mock / CSV / 未来任何数据源都是插件，**产品本身不关心数据从哪来**。这就避免了"天天爬虫、天天修接口"的泥潭。
+- **干净的工程**：Clean Architecture + 单向数据流 + 分层解耦 + 单元/集成测试 + Lint 0 错误。它证明的不只是"会调 AI"，而是**会做真正的软件**。
+
+---
+
+## 快速开始（3 分钟）
 
 ```bash
-# 1) 起后端（内置 H2 + JobProvider Mock，零配置）
+# 1) 起后端（内置数据 + Mock 数据源，零配置）
 cd backend
-./gradlew bootRun            # http://localhost:8080  (GET /api/v1/jobs)
+./gradlew bootRun            # http://localhost:8080
 
-# 2) 起 Web 端（连后端 JobProvider）
+# 2) 起 Web 端（连后端）
 cd web
-pnpm install && pnpm dev      # http://localhost:3000 → /explorer
+pnpm install && pnpm dev      # http://localhost:3000
 
-# 3) Android（Android Studio 打开 android/ 直接运行）
+# 3) Android（用 Android Studio 打开 android/ 直接运行）
 cd android
 ./gradlew :app:assembleDebug :app:testDebugUnitTest
 ```
 
-> 后端零配置、Mock 数据开箱即用；Web 连后端、Android 可装，**端手一体**。这就是「别人能跑」的最低门槛。
+> 后端零配置、开箱即用；Web 连后端、Android 可装。最低门槛即可跑起来看到完整产品。
 
 ---
 
-## 🧱 架构
+## 架构
 
 ```
-Android (Kotlin/Compose/MVI)   Web (Next.js)
-          │        ★ 端手同步         │
-          ▼                          ▼
-     Backend (Spring Boot)
-  { code, message, data } 契约 · WebSocket 实时推送
-          │
-          ▼
-  JobProvider (可插拔)   ──►  Mock · CSV · RSS · Boss · Liepin(未来)
-          │
-          ▼
-  AI 层 · LLM 网关 · RAG 知识库 · Agent
+ Android (Kotlin/Compose)     Web (Next.js)
+        │       实时同步          │
+        ▼                        ▼
+   Backend (Spring Boot)  · 统一数据契约 · 实时推送
+        │
+        ▼
+   职位数据源（可插拔）—— Mock · CSV · 未来更多
+        │
+        ▼
+   AI 层 · 岗位分析 · 匹配度 · 公司画像
 ```
 
-- **契约统一**：所有端走 `{ code, message, data }`，字段 `snake_case`，一处解包，全端一致。
-- **数据源抽象**：`JobProvider.search()/detail()/company()`，数据来源完全插件化。
-- **AI 纵深**：LLM 网关（LiteLLM）· RAG（AnythingLLM）· Agent 编排（王庭技术沉淀）。
+- **统一契约**：所有端走同一套 `{ code, message, data }` 数据信封，字段 `snake_case`。
+- **数据源抽象**：职位读取走一个接口，数据来源完全插件化——换数据源不改任何界面。
+- **AI 能力层**：岗位分析、匹配度、公司画像，作为服务能力，而不是独立的聊天入口。
 
 ---
 
-## 📁 结构
+## 技术栈
+
+| 端 | 技术 |
+|----|------|
+| Android | Kotlin · Jetpack Compose · MVI · Hilt · Clean Architecture |
+| Web | Next.js · TypeScript · Tailwind CSS |
+| 后端 | Kotlin · Spring Boot · WebSocket · 可插拔数据源 · AI 服务层 |
+| 数据 | 可插拔数据源（Mock / CSV / 未来插件），统一契约 |
+
+---
+
+## 目录结构
 
 | 目录 | 说明 |
 |------|------|
-| `android/` | 原生 Android 应用（Kotlin · Jetpack Compose · MVI · Hilt · Clean Arch） |
-| `backend/` | Kotlin + Spring Boot 后端（REST 契约 · WebSocket · JobProvider · AI 网关） |
-| `ios/` | iOS 工程（规划或后续） |
-| `docs/` | 方向总纲 / 设计系统规范 |
+| `android/` | Android 原生应用 |
+| `web/` | Web 端（Next.js） |
+| `backend/` | 后端服务（Spring Boot） |
+| `docs/` | 设计文档 / 规范 |
 | `fedata/` | 演示数据 |
 
 ---
 
-## 🧪 质量
+## 为什么值得看
 
-- **后端**：单元 + 集成测试（含 `@SpringBootTest` 真实启动验证契约）
-- **Android**：ViewModel / domain / mapper 单测；Lint 0 错误
-- **契约**：双端统一 `{ code, message, data }` 信封
+如果你在做 AI 应用、想做端手一体的产品，或者想看看"怎么把一个 AI 功能做成真正有用的产品"——这里有一套完整的、可运行、可扩展的实践。
+
+它也是一个公开的成长记录：从 v0.1 做一个能跑的产品，到 v0.2 把端手数据链路打通。**按版本长大，而不是按代码行数堆。**
 
 ---
 
-## 📄 License
+## 版本
+
+- **v0.1 · Foundation**：端手一体骨架、可插拔数据源、产品级视觉。
+- **v0.2 · Connect**：端手数据源真正打通，Web/App/后端一套模型。
+- **v0.3 · Insight**（规划）：AI 让每个岗位"看得懂、比得出、能决策"。
+
+完整路线见 [ROADMAP](ROADMAP.md)，变更见 [CHANGELOG](CHANGELOG.md)。
+
+---
+
+## License
 
 MIT
 
 ---
 
-## 🙌 关于
+## 关于
 
-这个项目是一个独立作者的公开作品。它同时承载一个意图——**用持续、真实、有人用的作品，去证明能力本身，而不止于一张学历**。
+一个独立作者持续维护的公开作品。如果你觉得有用，欢迎 star；如果发现问题，欢迎提 Issue——**真正的产品，从第一批用户开始。**
 
-如果你觉得有用，欢迎 star；如果你发现问题，欢迎提 Issue——**真正的产品，从第一批用户开始。**
-
-- 📅 [CHANGELOG](CHANGELOG.md) · v0.1 Foundation → v0.2 Connect
-- 🗺 [ROADMAP](ROADMAP.md) · v0.1 → v1.0 Agent
-- 🤝 [CONTRIBUTING](CONTRIBUTING.md) · [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)
+- 👏 [贡献指南](CONTRIBUTING.md) · [行为准则](CODE_OF_CONDUCT.md)
