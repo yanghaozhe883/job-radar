@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { ExplorerJob } from "@/lib/types";
 
 export default function ExplorerPage() {
@@ -56,7 +57,7 @@ export default function ExplorerPage() {
       ) : (
         <div className="grid grid-cols-1 gap-3">
           {jobs.map((job) => (
-            <div key={job.id} className="glass p-5 hover:border-primary/30 transition">
+            <Link key={job.id} href={`/jobs/${job.id}`} className="glass p-5 block hover:border-primary/30 transition">
               <div className="flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 text-primary font-bold text-lg">
                   {job.companyLogo}
@@ -82,7 +83,7 @@ export default function ExplorerPage() {
                   ))}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
           {jobs.length === 0 && (
             <div className="text-text-tertiary text-sm py-16 text-center">暂无职位（后端未连接？）</div>
