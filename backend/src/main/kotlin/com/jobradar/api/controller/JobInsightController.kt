@@ -6,7 +6,7 @@ import com.jobradar.api.ApiResponse
 import com.jobradar.domain.JobInsight
 import com.jobradar.insight.InsightJob
 import com.jobradar.insight.InsightService
-import com.jobradar.insight.UserProfile
+import com.jobradar.insight.UserProfileProvider
 import com.jobradar.provider.JobProviderRegistry
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,24 +16,26 @@ import org.springframework.web.bind.annotation.RestController
 
 /**
  * v0.3 · Insight endpoint.
- *   GET /api/v1/jobs/{id}/insight
+ *   GET /api/v1/jobs/{id}/insight?user_id={userId}
  *
- * Reads the job through the SAME JobProvider as /jobs (single source of truth),
- * then asks InsightService (which never knows the AI details).
+ * Grounding rule: **Client chooses the job, Backend owns the user context.**
+ * The job comes from the SAME JobProvider as /jobs (single source of truth);
+ * the user profile comes from the BACKEND (UserProfileProvider reading the
+ * saved preference) — NOT from client-supplied skills/years params. Missing
+ * user info stays empty, so the model can't invent facts the user never stated.
  */
 @RestController
 @RequestMapping("\${api.base-path:/api/v1}")
 class JobInsightController(
     private val registry: JobProviderRegistry,
     private val insightService: InsightService,
+    private val userProfileProvider: UserProfileProvider,
 ) {
 
     @GetMapping("/jobs/{id}/insight")
     fun insight(
         @PathVariable id: String,
-        @RequestParam(required = false, name = "target_roles") targetRoles: List<String>?,
-        @RequestParam(required = false) skills: List<String>?,
-        @RequestParam(required = false, name = "years_of_experience") yearsOfExperience: Int?,
+        @RequestParam(required = false, name = "user_id") userId: Long?,
     ): ApiResponse<JobInsight> {
         val p = registry.active.detail(id)
             ?: throw ApiException(ApiCode.NOT_FOUND, "职位不存在")
@@ -50,11 +52,8 @@ class JobInsightController(
             description = p.description,
             companyName = p.companyName,
         )
-        val profile = UserProfile(
-            targetRoles = targetRoles ?: emptyList(),
-            skills = skills ?: emptyList(),
-            yearsOfExperience = yearsOfExperience ?: 0,
-        )
+        // Backend owns the user context — read from saved preference, not client.
+        val profile = userProfileProvider.profileFor(userId)
         return ApiResponse.ok(insightService.generate(job, profile))
     }
 }

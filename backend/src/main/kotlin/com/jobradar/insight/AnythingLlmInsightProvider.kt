@@ -42,11 +42,19 @@ class AnythingLlmInsightProvider(
     }
 
     private fun buildPrompt(job: InsightJob, profile: UserProfile): String {
-        val userSkill = if (profile.skills.isNotEmpty()) profile.skills.joinToString("、") else "（未提供，请用通用判断）"
-        val userTarget = if (profile.targetRoles.isNotEmpty()) profile.targetRoles.joinToString("、") else "（未明确）"
+        val userSkill = if (profile.skills.isNotEmpty()) profile.skills.joinToString("、") else "（未提供）"
+        val userTarget = if (profile.targetRoles.isNotEmpty()) profile.targetRoles.joinToString("、") else "（未提供）"
+        val userExp = if (profile.yearsOfExperience > 0) "${profile.yearsOfExperience} 年" else "（未提供）"
+        val userCity = profile.city ?: "（未提供）"
         return """
             你是求职岗位洞察助手。请根据下面的【职位】和【求职者画像】，输出一个 JSON 对象。
             只输出 JSON 本身，不要 markdown 代码块，不要任何解释或前后缀。
+
+            硬性事实约束（必须严格遵守）：
+            1. 只能使用【职位】和【求职者画像】中【明确提供】的事实；缺失的信息一律写成“未提供 / 无法判断”，严禁推测或补全。
+            2. 严禁从技能推断从业年限、工作经历、公司经历、学历、行业经历 —— 例如“掌握 Kotlin”不等于“有 Kotlin 工作经验”，“做过项目”不等于“有 N 年经验”。
+            3. 若画像某字段为“未提供”，匹配度该维度取 0，reason 写“用户未提供该信息，无法判断”。
+            4. 所有 match reason 必须能追溯到上面给出的具体输入事实，不得凭空断言。
 
             输出字段（严格固定，键名见下）：
             {
@@ -59,18 +67,18 @@ class AnythingLlmInsightProvider(
                 "skillMatch": 0,
                 "experienceMatch": 0,
                 "directionMatch": 0,
-                "skillReason": "技能匹配的简短理由",
-                "experienceReason": "经验匹配的简短理由",
-                "directionReason": "方向匹配的简短理由"
+                "skillReason": "可追溯到输入的理由",
+                "experienceReason": "可追溯到输入的理由",
+                "directionReason": "可追溯到输入的理由"
               }
             }
-            三个匹配度取 0..100 整数，务必给出相应 reason，说明为什么是这个分数（而不是拍脑袋的数字）。
+            三个匹配度取 0..100 整数，务必给出 reason，且 reason 只能引用输入中真实存在的事实。
 
             【职位】
             标题：${job.title}
             城市：${job.city}
             薪资：${job.salaryMinK}-${job.salaryMaxK}K
-            类型：${job.jobType} / 经验：${job.experience} / 学历：${job.education}
+            类型：${job.jobType} / 经验要求：${job.experience} / 学历要求：${job.education}
             技能：${job.skills.joinToString("、")}
             公司：${job.companyName ?: "未知"}
             描述：${job.description?.take(800) ?: "无"}
@@ -78,8 +86,8 @@ class AnythingLlmInsightProvider(
             【求职者画像】
             目标方向：$userTarget
             已有技能：$userSkill
-            经验年限：${profile.yearsOfExperience} 年
-            目标城市：${profile.city ?: "不限"}
+            经验年限：$userExp
+            目标城市：$userCity
         """.trimIndent()
     }
 
