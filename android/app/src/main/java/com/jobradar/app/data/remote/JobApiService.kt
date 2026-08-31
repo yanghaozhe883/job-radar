@@ -1,6 +1,7 @@
 package com.jobradar.app.data.remote
 
 import com.jobradar.app.data.remote.dto.JobDto
+import com.jobradar.app.data.remote.dto.JobInsightDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -34,4 +35,13 @@ interface JobApiService {
         @Query("count") count: Int = 5,
         @Query("user_id") userId: Long? = null,
     ): ApiResponse<List<JobDto>>
+
+    /** v0.3 · Insight — ask the backend (AI) to explain a job for this user. */
+    @GET("/api/v1/jobs/{id}/insight")
+    suspend fun getInsight(
+        @Path("id") id: String,
+        @Query("target_roles") targetRoles: List<String>? = null,
+        @Query("skills") skills: List<String>? = null,
+        @Query("years_of_experience") yearsOfExperience: Int? = null,
+    ): ApiResponse<JobInsightDto>
 }

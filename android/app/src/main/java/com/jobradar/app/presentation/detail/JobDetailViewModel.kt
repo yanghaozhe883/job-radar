@@ -6,6 +6,7 @@ import com.jobradar.app.core.mvi.MviViewModel
 import com.jobradar.app.domain.model.Job
 import com.jobradar.app.domain.model.JobStatus
 import com.jobradar.app.domain.usecase.GetJobDetailUseCase
+import com.jobradar.app.domain.usecase.GetJobInsightUseCase
 import com.jobradar.app.domain.usecase.ObserveJobStatusUseCase
 import com.jobradar.app.domain.usecase.ObservePreferencesUseCase
 import com.jobradar.app.domain.usecase.ScoreJobUseCase
@@ -14,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -32,6 +34,7 @@ class JobDetailViewModel @Inject constructor(
     private val setJobStatus: SetJobStatusUseCase,
     private val observePreferences: ObservePreferencesUseCase,
     private val scoreJob: ScoreJobUseCase,
+    private val getJobInsight: GetJobInsightUseCase,
 ) : MviViewModel<JobDetailContract.State, JobDetailContract.Event, JobDetailContract.Effect>(JobDetailContract.State()) {
 
     private val jobId: Long = savedStateHandle["jobId"] ?: -1L
@@ -56,6 +59,25 @@ class JobDetailViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
         reduce { it.copy(isLoading = true) }
+        loadInsight()
+    }
+
+    /** v0.3 · Load the explainable insight once (from the shared backend contract). */
+    private fun loadInsight() {
+        if (!validJobId) return
+        viewModelScope.launch {
+            reduce { it.copy(insightState = com.jobradar.app.presentation.detail.InsightUiState.Loading) }
+            // pass the user's target / skills as the profile grounding (extendable).
+            val insight = getJobInsight(jobId.toString())
+            if (insight != null) {
+                val state = if (insight.generatedBy == "fallback")
+                    com.jobradar.app.presentation.detail.InsightUiState.Degraded
+                else com.jobradar.app.presentation.detail.InsightUiState.Loaded
+                reduce { it.copy(insight = insight, insightState = state) }
+            } else {
+                reduce { it.copy(insightState = com.jobradar.app.presentation.detail.InsightUiState.Error) }
+            }
+        }
     }
 
     override suspend fun handleEvent(event: JobDetailContract.Event) {

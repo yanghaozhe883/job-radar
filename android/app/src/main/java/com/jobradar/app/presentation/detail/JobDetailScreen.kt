@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlin.math.cos
 import kotlin.math.sin
 import com.jobradar.app.domain.model.JobStatus
+import com.jobradar.app.domain.model.JobInsight
 import com.jobradar.app.domain.model.salaryLabel
 import com.jobradar.app.presentation.theme.JobRadarColors
 import com.jobradar.app.presentation.theme.JobRadarGradients
@@ -128,6 +129,13 @@ fun JobDetailScreen(
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
+
+                // v0.3 · AI Insight Card (explainable job understanding)
+                InsightCard(
+                    state = state.insight,
+                    uiState = state.insightState,
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // JD description fading in
                 Text(
@@ -312,4 +320,92 @@ private fun SkillRadarVisual(total: Int) {
             style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.5.dp.toPx()),
         )
     }
+}
+
+/** v0.3 · AI Insight Card — the explainable job understanding. */
+@Composable
+private fun InsightCard(state: JobInsight?, uiState: InsightUiState) {
+    when (uiState) {
+        InsightUiState.Loading -> Box(
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
+                .background(JobRadarColors.SurfaceGlassStrong).padding(vertical = 24.dp),
+            contentAlignment = Alignment.Center,
+        ) { Text("正在分析这个岗位…", color = JobRadarColors.TextSecondary, style = androidx.compose.material3.MaterialTheme.typography.bodySmall) }
+
+        InsightUiState.Error, InsightUiState.Degraded -> Box(
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
+                .background(JobRadarColors.SurfaceGlassStrong).padding(vertical = 24.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("AI 洞察暂不可用", color = JobRadarColors.TextSecondary, style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
+                Text("职位详情仍可正常查看", color = JobRadarColors.TextTertiary, style = androidx.compose.material3.MaterialTheme.typography.labelSmall)
+            }
+        }
+
+        InsightUiState.Loaded -> state?.let { insight ->
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text("AI Insight", color = JobRadarColors.TextPrimary, style = androidx.compose.material3.MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Match overview
+                Column(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
+                    .background(JobRadarColors.SurfaceGlassStrong).padding(16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                        Text("匹配度", color = JobRadarColors.TextPrimary, style = androidx.compose.material3.MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text("${insight.match.overall}", color = JobRadarColors.Primary, style = androidx.compose.material3.MaterialTheme.typography.displaySmall, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    MatchBar("技能匹配", insight.match.skillMatch, insight.match.skillReason, JobRadarColors.Primary)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    MatchBar("经验匹配", insight.match.experienceMatch, insight.match.experienceReason, JobRadarColors.Accent)
+                    Spacer(modifier = Modifier.height(10.dp))
+                    MatchBar("方向匹配", insight.match.directionMatch, insight.match.directionReason, JobRadarColors.Success)
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+
+                InsightSection("岗位职责", insight.responsibilities, "◎")
+                InsightSection("核心技能", insight.coreSkills, "✦")
+                InsightSection("风险点", insight.riskPoints, "!")
+                InsightSection("成长空间", insight.growth, "↑")
+                InsightSection("为什么推荐", insight.whyRecommended, "▶")
+            }
+        }
+    }
+}
+
+@Composable
+private fun MatchBar(label: String, value: Int, reason: String, color: androidx.compose.ui.graphics.Color) {
+    Column {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(label, color = JobRadarColors.TextSecondary, style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
+            Spacer(modifier = Modifier.weight(1f))
+            Text("$value", color = color, style = androidx.compose.material3.MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        Box(modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)).background(JobRadarColors.Border)) {
+            Box(modifier = Modifier.fillMaxWidth(value.coerceIn(0, 100) / 100f).height(6.dp)
+                .clip(RoundedCornerShape(3.dp)).background(color))
+        }
+        if (reason.isNotBlank()) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(reason, color = JobRadarColors.TextTertiary, style = androidx.compose.material3.MaterialTheme.typography.labelSmall)
+        }
+    }
+}
+
+@Composable
+private fun InsightSection(title: String, items: List<String>, icon: String) {
+    if (items.isEmpty()) return
+    Column(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
+        .background(JobRadarColors.SurfaceGlassStrong).padding(16.dp)) {
+        Text("$icon  $title", color = JobRadarColors.Primary, style = androidx.compose.material3.MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(6.dp))
+        items.forEach {
+            Text("·  $it", color = JobRadarColors.TextSecondary, style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
+            Spacer(modifier = Modifier.height(2.dp))
+        }
+    }
+    Spacer(modifier = Modifier.height(10.dp))
 }
