@@ -2,6 +2,21 @@
 
 JobRadar 按版本成长。每个版本都是值得发布、值得回顾、值得展示的里程碑。
 
+## v0.3 · Insight ✅（已发布 `v0.3.0`）
+
+**Make jobs understandable.**
+
+JobRadar 开始从“管理求职过程”走向“辅助求职决策”。
+
+- **AI Job Insight**：岗位职责、核心技能、风险点、成长空间、推荐理由
+- **Explainable Match**：技能 / 经验 / 方向三维匹配，而非单一黑盒分数
+- **Grounded Analysis**：分析严格基于职位与用户画像，缺失信息明确标记“未提供”，不主动补全
+- **Android + Web 共用统一 Insight API 与领域模型**
+- **Insight 缓存、结构化输出校验、失败重试与安全降级**
+- **AI 服务不可用时不影响职位详情核心功能**
+
+---
+
 ## v0.2 · Connect ✅（已发布 `v0.2.0`）
 
 **Mission：所有客户端只认 Backend，Backend 只认 JobProvider。**
